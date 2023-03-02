@@ -10,6 +10,39 @@ public class NotaGenerator {
      */
     public static void main(String[] args) {
         // TODO: Implement interface menu utama
+        while (true){
+            //Print 
+            printMenu();
+            System.out.print("Pilihan: ");
+            int pilihan= input.nextInt();
+            input.nextLine();
+            
+            if (pilihan == 1) {
+                System.out.println("================================");
+                System.out.print("Masukkan nama Anda: ");
+                String nama = input.nextLine();
+                String[] space = nama.split(" ");
+                String first = space[0];
+                System.out.println("Masukkan nomor handphone Anda: ");
+                String nomorhp = "";
+                boolean numCheck = false;
+        
+                while (!numCheck) {
+                    if (nomorhp.matches("[0-9]+")) {
+                        numCheck = true;
+                        
+                    } else {
+                        System.out.println("Nomor hp hanya menerima digit");
+                    }
+                }
+                System.out.println("ID Anda: "+generateId(first, nomorhp));
+            } else if (pilihan == 2) {
+                System.out.print("Masukkan tanggal terima: ");
+                String tanggal = input.nextLine();
+            }else {
+                System.out.println("Perintah tidak diketahui, silakan periksa kembali.");
+            }
+        }
     }
 
     /**
@@ -40,10 +73,41 @@ public class NotaGenerator {
      *
      * @return String ID anggota dengan format [NAMADEPAN]-[nomorHP]-[2digitChecksum]
      */
-    public static String generateId(String nama, String nomorHP){
-        // TODO: Implement generate ID sesuai soal.
-        return null;
+    public static String generateId(String nama, String nomorHP) {
+        int id = 7;
+        nama = nama.toLowerCase();
+        char[] asciiName = nama.toCharArray();
+        char[] asciiNumber = nomorHP.toCharArray();
+
+        for (char c : asciiName) {
+            if (Character.isWhitespace(c)) {
+                break;
+            } else if (!Character.isLetter(c)) {
+                c = '7';
+            } else {
+                c = Character.toLowerCase(c);
+                c -= 'a' - 1;
+            }
+            id += c;
+        }
+
+        for (char c : asciiNumber) {
+            if (!Character.isDigit(c)) {
+                c = '7';
+            } else {
+                c -= '0';
+            }
+            id += c;
+        }
+
+        String strId = String.format("%02d", id);
+
+        String finalName = nama.split(" ")[0];
+        String result = finalName.toUpperCase() + "-" + nomorHP + "-" + strId;
+
+        return result;
     }
+
 
     /**
      *
