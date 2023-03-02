@@ -229,5 +229,5 @@ public class NotaGenerator {
             }
         }
         return nomorhp;
-    }
+    } 
 }
