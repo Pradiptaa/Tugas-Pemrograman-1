@@ -68,8 +68,8 @@ public class NotaGenerator {
                     System.out.print("Masukkan berat cucian Anda [Kg]: "); //Meminta input berat cucian
                     //Menggunakan try catch untuk cek validasi input
                     try {
+                        input.nextLine(); //diatas
                         inputBerat = input.nextInt();
-                        input.nextLine();
                         //If condition apabila input kurang/ sama dengan 0
                         if (inputBerat <= 0) {
                             throw new Exception("Harap masukkan berat cucian Anda dalam bentuk bilangan positif."); //Message untuk meminta input berat cucian yang benar
@@ -226,6 +226,8 @@ public class NotaGenerator {
             //Else condition apabila input selain angka
             } else {
                 System.out.println("Nomor hp hanya menerima digit");
+                System.out.print("Masukkan nomor handphone Anda: ");
+                nomorhp = input.nextLine();
             }
         }
         return nomorhp;
