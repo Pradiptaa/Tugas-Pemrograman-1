@@ -1,9 +1,7 @@
 package assignments.assignment2;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Scanner;
-import java.time.LocalDate;
 
 import assignments.assignment1.NotaGenerator;
 
@@ -43,8 +41,9 @@ public class MainMenu {
         System.out.println("Terima kasih telah menggunakan NotaGenerator!");
     }
 
+//PILIHAN 1 ========================================================================================================================================
     private static void handleGenerateUser() {
-        // TODO: handle generate user
+        //Meminta input nama
         System.out.println("Masukkan nama Anda: ");
         String nama = input.nextLine();
 
@@ -63,8 +62,9 @@ public class MainMenu {
                 nomorhp = input.nextLine();
             }
         }
-
+        //boolean untuk newmember
         boolean newMember = false;
+        //While loop untuk validasi member baru
         while (newMember == false) {
             for (int i=0; i<memberList.size(); i++) {
                 if (memberList.get(i).getNama().equalsIgnoreCase(nama) && memberList.get(i).getNomorhp().equals(nomorhp)) {
@@ -74,35 +74,46 @@ public class MainMenu {
             }
             newMember = true;
         }
+        //Menambah member baru ke ArrayList
         Member id = new Member(nama, nomorhp);
         memberList.add(id);
+        //Output apabila member baru
         System.out.println("Berhasil membuat member dengan ID "+ generateId(nama, nomorhp));
 
     }
-
+//PILIHAN 2 ========================================================================================================================================
     private static void handleGenerateNota() {
-        // TODO: handle ambil cucian
+        //Initial variables
         boolean check= true;
         String inputPaket = "";
         String[] allowedPakets = {"express", "fast", "reguler"};
         int hargaLaundry = 0;
         int hariSelesai = 0;
-        int inputBerat = 0;
-
+        String inputBerat = "";
+        int beratInt = 0;
+        //Meminta input ID
         System.out.println("Masukkan ID member: ");
         String checkid = input.nextLine();
         int idnota = 0;
+        boolean memberexist = false;
 
         Member member1 = new Member("","");
 
+        //For loop check member baru atau tidak
         for (int j = 0; j < memberList.size(); j++) {
             if (memberList.get(j).getId().equals(checkid)) {
                 member1 = memberList.get(j);
                 memberList.get(j).addBonuscounter();
-
+                memberexist = true;
+            } else {
+                continue;
+            }
+                //Loop untuk paket laundry
+                if (memberexist) {
                 while (check) {
                     System.out.println("Masukkan paket laundry: ");
                     inputPaket = input.nextLine().toLowerCase();
+                    //If condition bila input termasuk dalat list allowedPaket
                     if (Arrays.asList(allowedPakets).contains(inputPaket)) {
                         if (inputPaket.equals("express")){
                             hargaLaundry = 12000;
@@ -126,62 +137,90 @@ public class MainMenu {
                 }
                 while (check) {
                     System.out.print("Masukkan berat cucian Anda [Kg]: "); //Meminta input berat cucian
-                    inputBerat = input.nextInt(); 
-                    if (inputBerat<=0) {
-                        System.out.println("Harap masukkan berat cucian Anda dalam bentuk bilangan positif.");
-                        break;
-                    } else if (inputBerat == 1) {
-                        System.out.println("Cucian kurang dari 2 kg, maka cucian akan dianggap sebagai 2 kg");
-                        inputBerat = 2;
-                        break;
-                    } else if (inputBerat >=2) {
-                        break; 
-                    } else {
-                        System.out.println("Harap masukkan berat cucian Anda dalam bentuk bilangan.");
-                    }  
+                    inputBerat = input.nextLine();
+                    boolean numCheck = false; //Boolean untuk loop
+                    beratInt= Integer.parseInt(inputBerat);
+
+                    while (!numCheck) {
+                        //If condition untuk input angka
+                        if (inputBerat.matches("[0-9]+")) {
+                            numCheck = true; //Mengganti boolean numCheck menjadi true
+                            if (beratInt <=0) {
+                                System.out.println("Harap masukkan berat cucian Anda dalam bentuk bilangan positif.");
+                                break;
+                            } else if (beratInt == 1) {
+                                System.out.println("Cucian kurang dari 2 kg, maka cucian akan dianggap sebagai 2 kg");
+                                beratInt = 2;
+                                break;
+                            } else if (beratInt >=2) {
+                                break;
+                            }
+                        //Else condition apabila input selain angka
+                        } else {
+                            System.out.println("Harap masukkan berat cucian Anda dalam bentuk bilangan.");
+                            System.out.print("Masukkan nomor handphone Anda: ");
+                            inputBerat = input.nextLine();
+                        }
+                    }
+                    break;
                 }
+            
+                //Print berhasil
                 System.out.println("Berhasil menambahkan nota!");
                 System.out.printf("[ID Nota = %d]\n",idnota);
-                idnota += 1;
 
-                DateTimeFormatter formatTanggal = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-                LocalDate tanggalTerima = LocalDate.parse(fmt.format(cal.getTime()), formatTanggal);
-                LocalDate tanggalSelesainya = tanggalTerima.plusDays(hariSelesai);
-                String tanggalSelesai = tanggalSelesainya.format(formatTanggal);
-
-                int totalHarga = inputBerat*hargaLaundry;
-
-                Nota newNota = new Nota(member1, inputPaket, inputBerat, fmt.format(cal.getTime()));
-
-                newNota.setHariSelesai(hariSelesai);
+                //Add nota baru ke ArrayList yang sudah ditentukan
+                Nota newNota = new Nota(member1, inputPaket, beratInt, fmt.format(cal.getTime()));
+                notaList.add(newNota);
+                newNota.setHariSelesai(inputPaket);
                 newNota.setReady(false);
 
+                //Format tanggal ke dd/MM/yyyy
+                SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
+                Calendar newCal = Calendar.getInstance();
+                //set Time ke cal.getTime
+                newCal.setTime(cal.getTime());
+                //Menambah tanggal untuk tanggal selesai
+                newCal.add(Calendar.DAY_OF_YEAR, newNota.getHariselesai());
+                String tanggalSelesai = fmt.format(newCal.getTime());
+                //Menghitung harga
+                int totalHarga = beratInt*hargaLaundry;
+
+                //Print id dan paket
                 System.out.println("ID      : "+checkid);
                 System.out.println("Paket   : "+inputPaket);
 
+                //Bonuscounter jika 3x menggunakan
                 if(member1.getBonuscounter() == 3) {
                     int Diskon = totalHarga/2;
-                    System.out.println("Harga: \n"+inputBerat+" kg x "+hargaLaundry+" = "+totalHarga+" = "+Diskon+" (Discount member 50%%!!!!)");
-                    member1.resetBonuscounter();
+                    System.out.println("Harga: \n"+beratInt+" kg x "+hargaLaundry+" = "+totalHarga+" = "+Diskon+" (Discount member 50%%!!!!)");
+                    member1.resetBonuscounter(); //reset apabila sudah mendapat bonus
                 } else {
-                    System.out.println("Harga: \n"+inputBerat+" kg x "+hargaLaundry+" = "+totalHarga);
+                    System.out.println("Harga: \n"+beratInt+" kg x "+hargaLaundry+" = "+totalHarga);
                 }
                 System.out.printf("Tanggal Terima  : %s\n", fmt.format(cal.getTime()));
                 System.out.printf("Tanggal Selesai : %s\n", tanggalSelesai);
                 System.out.println("Status      	: Belum bisa diambil :(");
-            } else {
-                System.out.println("Member dengan ID "+checkid+" tidak ditemukan!");
+                //Menambah index idnota
+                idnota += 1;
+            }
+            // Jika id tidak ditemukan
+            else {
+                System.out.println("Member dengan ID "+checkid+ " tidak ditemukan!");
+                break;
             }
         }
     }
+    
 
-
+//PILIHAN 3 ========================================================================================================================================
     private static void handleListNota() {
-        // TODO: handle list semua nota pada sistem
+        //Print info sesuai size notaList
         System.out.println("Terdaftar " + notaList.size() + " nota dalam sistem.");
 
+        //for loop untuk Status sesuai tanggal ready
         for (Nota nota : notaList) {
-            if (nota.getReady()) {
+            if (nota.getReady() ) {
                 System.out.println("- [" + nota.getIdNota() + "] Status: Sudah dapat diambil!");
             } else {
                 System.out.println("- [" + nota.getIdNota() + "] Status: Belum bisa diambil :(");
@@ -189,65 +228,71 @@ public class MainMenu {
         }
     }
 
+//PILIHAN 4 ========================================================================================================================================
     private static void handleListUser() {
-        // TODO: handle list semua user pada sistem
+        //Print info jumlah member sesuai size member
         System.out.printf("Terdaftar %d member dalam sistem.\n", memberList.size());
+        //for loop untuk nama dan id
         for(int i = 0; i < memberList.size(); i++){
             System.out.printf("- %s : %s\n", memberList.get(i).getId(), memberList.get(i).getNama());
         }
     }
 
+//PILIHAN 5 ========================================================================================================================================
     private static void handleAmbilCucian() {
-        // TODO: handle ambil cucian
-        System.out.println("Masukkan ID nota yang akan diambil: ");
-        String idAmbil = input.nextLine();
+        //Initial variables
+        String idAmbil = "";
+        int idInt = 0;
         boolean checkAmbil = true;
-        ArrayList<Nota> notaList= new ArrayList<Nota>();
-        ArrayList<Nota> notaSimpan = new ArrayList<Nota>(notaList.size()-1);
 
+        //while loop untuk pengambilan
         while (checkAmbil) {
-            String ambilLaundry = input.nextLine();
-            if (ambilLaundry.matches("^[0-9]+$")) { // mengecek apakah id nota yang diinput angka apa bukan
-                int ambilInt = Integer.parseInt(ambilLaundry); // mengubah input string menjadi int
-        
-                boolean notaDitemukan = false;
-                for (Nota nota : notaList) {
-                    if (nota.getIdNota() == ambilInt) {
-                        notaDitemukan = true;
-                        // mengecek status nota yang ingin diambil
-                        if (!nota.getReady()) {
-                            System.out.printf("Nota dengan ID %d gagal diambil!\n", nota.getIdNota());
+            //Meminta input
+            System.out.println("Masukkan ID nota yang akan diambil: ");
+            idAmbil = input.nextLine();
+
+            if (idAmbil.matches("^[0-9]+$")) { // mengecek apakah id nota yang diinput angka apa bukan
+                idInt = Integer.parseInt(idAmbil);
+                boolean found = false;
+                //for loop untuk info kesiapan laundry
+                for (int x = 0; x < notaList.size(); x++) {
+                    if (notaList.get(x).getIdNota() == idInt) {
+                        found = true;
+                        if (notaList.get(x).getReady()) {
+                            System.out.printf("Nota dengan ID %d berhasil diambil!\n", idInt);
+                            notaList.remove(x);
                         } else {
-                            System.out.printf("Nota dengan ID %d berhasil diambil!\n", nota.getIdNota());
-                            notaList.remove(nota);
-                            notaSimpan.addAll(notaList); // menambahkan semua nota yang tidak diambil ke dalam notaSimpan
-                            notaList = notaSimpan; // mengubah notaList menjadi nota yang baru
+                            System.out.printf("Nota dengan ID %d gagal diambil!\n", idInt);
                         }
                         break;
                     }
                 }
-        
-                if (!notaDitemukan) {
-                    System.out.printf("Nota dengan ID %d tidak ditemukan!\n", ambilInt);
+                if (!found) { //If condition bila id nota tidak ada
+                    System.out.printf("Nota dengan ID %d tidak ditemukan!\n", idInt);
                 }
-                break;
+                checkAmbil = false;
             } else { // input id nota bukan angka
-                System.out.println("ID nota berbentuk angka!");
+                System.out.println("ID nota harus berupa angka!");
             }
         }
     }
 
+//PILIHAN 6 ========================================================================================================================================
     private static void handleNextDay() {
-        // TODO: handle ganti hari
+        //Print tidur
         System.out.println("Dek Depe tidur hari ini... zzz...");
+        //Menambah hari
         cal.add(Calendar.DAY_OF_YEAR, 1);
 
+        //Update info laundry yang sudah bisa diambil
         for (int j = 0; j < notaList.size(); j++) {
             notaList.get(j).kurangSisaHari();
+            notaList.get(j).isLaundryReady();
             if (notaList.get(j).getReady()) {
                 System.out.printf("Laundry dengan nota ID %d sudah dapat diambil!\n", notaList.get(j).getIdNota());
             }
         }
+        //Print selamat pagi
         System.out.println("Selamat pagi dunia!");
         System.out.println("Dek Depe: It's CuciCuci Time.");
     }
@@ -264,5 +309,4 @@ public class MainMenu {
         System.out.println("[6] Next Day");
         System.out.println("[0] Exit");
     }
-
 }

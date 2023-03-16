@@ -43,12 +43,18 @@ public class Nota {
         return this.idNota;
     }
 
-    public void setHariSelesai(int selesai) {
-        this.hariSelesai = selesai;
-    }
-
     public int getHariselesai() {
         return this.hariSelesai;
+    }
+
+    public void setHariSelesai(String paket) {
+        if(paket.equalsIgnoreCase("express")){
+            this.hariSelesai = 1;
+        }else if(paket.equalsIgnoreCase("fast")){
+            this.hariSelesai = 2;
+        }else if (paket.equalsIgnoreCase("reguler")) {
+            this.hariSelesai = 3;
+        }
     }
 
     public void setReady(boolean ready) {
@@ -60,7 +66,10 @@ public class Nota {
 
     // Method to check if laundry is ready for pickup
     public boolean isLaundryReady(){
-        return this.hariSelesai == 0;
+        if (this.hariSelesai == 0) {
+            this.ready = true;
+        }
+        return ready;
     }
 
     // Method to mark laundry as ready for pickup
