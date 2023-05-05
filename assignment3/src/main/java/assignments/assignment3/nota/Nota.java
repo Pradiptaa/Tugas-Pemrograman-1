@@ -15,6 +15,13 @@ public class Nota {
 
     public Nota(Member member, int berat, String paket, String tanggal) {
         //TODO
+        this.member = member;
+        this.berat = berat;
+        this.paket = paket.toLowerCase();
+        this.tanggalMasuk = tanggal;
+        this.services = new LaundryService[1];
+        this.isDone = false;
+        this.id = ++totalNota;
     }
 
     public void addService(LaundryService service){
@@ -23,10 +30,27 @@ public class Nota {
 
     public String kerjakan(){
         // TODO
-        return "";
+        if (isDone) {
+            return "Nota telah selesai dikerjakan.";
+        }
+
+        for (LaundryService service : services) {
+//            service.kerjakan();
+        }
+
+        sisaHariPengerjaan--;
+        if (sisaHariPengerjaan == 0) {
+            isDone = true;
+            return "Nota telah selesai dikerjakan.";
+        }
+
+        return "Nota sedang dikerjakan. Sisa hari pengerjaan: " + sisaHariPengerjaan;
     }
     public void toNextDay() {
         // TODO
+        if (!isDone) {
+            sisaHariPengerjaan--;
+        }
     }
 
     public long calculateHarga(){
@@ -36,7 +60,11 @@ public class Nota {
 
     public String getNotaStatus(){
         // TODO
-        return "";
+        if (isDone) {
+            return "Nota selesai";
+        } else {
+            return "Nota sedang dikerjakan";
+        }
     }
 
     @Override
