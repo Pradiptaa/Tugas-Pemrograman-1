@@ -1,15 +1,20 @@
 package assignments.assignment3.nota.service;
 
 public class AntarService implements LaundryService{
-    private boolean selesai = true;
+    private boolean selesai = false;
     @Override
     public String doWork() {
+        this.selesai = true;
         return "Sedang mengantar...";
     }
 
     @Override
     public boolean isDone() {
-        return this.selesai;
+        if (this.selesai == true){
+            return true;
+        } else {
+        return false;
+        }
     }
 
     @Override
