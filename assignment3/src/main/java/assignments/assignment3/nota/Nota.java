@@ -34,13 +34,13 @@ public class Nota {
         this.addService(new CuciService()); //Menambah cuci service
 
 
-        if (paket=="express") {
+        if (paket.equals("express")) {
             this.sisaHariPengerjaan = 1;
             this.baseHarga = 12000;
-        } else if(paket=="fast") {
+        } else if(paket.equals("fast")) {
             this.sisaHariPengerjaan = 2;
             this.baseHarga = 10000;
-        } else if (paket=="reguler") {
+        } else if (paket.equals("reguler")) {
             this.sisaHariPengerjaan = 3;
             this.baseHarga = 7000;
         }
