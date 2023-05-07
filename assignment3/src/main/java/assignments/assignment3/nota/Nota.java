@@ -30,6 +30,7 @@ public class Nota {
         this.isDone = false;
         this.id = totalNota++;
         this.services= new LaundryService[0];
+        tanggalSelesai = setTanggalSelesai();
 
         this.addService(new CuciService()); //Menambah cuci service
 
