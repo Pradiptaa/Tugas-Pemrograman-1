@@ -30,7 +30,6 @@ public class Nota {
         this.isDone = false;
         this.id = totalNota++;
         this.services= new LaundryService[0];
-        tanggalSelesai = setTanggalSelesai();
 
         this.addService(new CuciService()); //Menambah cuci service
 
@@ -45,6 +44,7 @@ public class Nota {
             this.sisaHariPengerjaan = 3;
             this.baseHarga = 7000;
         }
+        tanggalSelesai = setTanggalSelesai();
 
         Calendar copyOfCal = Calendar.getInstance();
         copyOfCal.setTime (NotaManager.cal.getTime());
