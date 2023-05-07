@@ -3,7 +3,6 @@ import assignments.assignment3.nota.service.CuciService;
 import assignments.assignment3.nota.service.LaundryService;
 import assignments.assignment3.user.Member;
 
-import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Calendar;
 
@@ -45,13 +44,11 @@ public class Nota {
             this.sisaHariPengerjaan = 3;
             this.baseHarga = 7000;
         }
-        //Try-Catch untuk sisaHariPengerjaan
-        try {
-        NotaManager.cal.setTime(NotaManager.fmt.parse(tanggal));
-        NotaManager.cal.add(5,this.sisaHariPengerjaan);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+
+        Calendar copyOfCal = Calendar.getInstance();
+        copyOfCal.setTime (NotaManager.cal.getTime());
+        copyOfCal.add(Calendar.DAY_OF_YEAR, sisaHariPengerjaan);
+        this.tanggalSelesai = NotaManager.fmt.format(NotaManager.cal.getTime());
     }
 
     public void addService(LaundryService service){
@@ -124,7 +121,7 @@ public class Nota {
         hasil += "Harga :\n";
         hasil += this.getBerat() + " kg x " + this.getBaseHarga() + " = " + (this.getBerat() * this.getBaseHarga()) + "\n";
         hasil += "tanggal terima  : " + this.getTanggal() + "\n";
-        hasil += "tanggal selesai : " + tanggalSelesai + "\n";
+        hasil += "tanggal selesai : " + getTanggalSelesai() + "\n";
         hasil += "--- SERVICE LIST ---\n";
 
         for (LaundryService service : this.getServices()) {
@@ -174,5 +171,9 @@ public class Nota {
 
     public long getBaseHarga(){
         return this.baseHarga;
+    }
+
+    public String getTanggalSelesai() {
+        return tanggalSelesai;
     }
 }
