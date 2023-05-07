@@ -45,6 +45,7 @@ public class Nota {
             this.sisaHariPengerjaan = 3;
             this.baseHarga = 7000;
         }
+        //Try-Catch untuk sisaHariPengerjaan
         try {
         NotaManager.cal.setTime(NotaManager.fmt.parse(tanggal));
         NotaManager.cal.add(5,this.sisaHariPengerjaan);
@@ -54,8 +55,10 @@ public class Nota {
     }
 
     public void addService(LaundryService service){
+        // Membuat Array untuk service dan copy
         LaundryService[] newServices = Arrays.copyOf(this.services, services.length+1);
         newServices[this.services.length]=service;
+        //overwrite dengan array yang baru
         this.services=newServices;
     }
 
@@ -79,26 +82,29 @@ public class Nota {
     
 
     public void toNextDay() {
+        //Mengurangi sisa hari pengerjaan
         if (!this.isDone()) {
             this.sisaHariPengerjaan--;
         }
     }
 
     public long calculateHarga(){
+        //Inisiasi harga
         long harga = 0;
-        harga = harga + (this.baseHarga * this.getBerat());
+        harga += this.getBaseHarga() * this.getBerat();
         for (LaundryService service : this.services) {
-            harga = harga + service.getHarga(this.getBerat());
+            harga += service.getHarga(this.getBerat()); //Menambah harga dengan layanan yang dipilih
         }
         
-        if (this.sisaHariPengerjaan < 0){
-            harga = harga + (sisaHariPengerjaan * 2000);
+        if (this.sisaHariPengerjaan < 0){ 
+            harga += sisaHariPengerjaan * 2000; //Harga yang akan dikurangi karena terlambat
         }
         
         return harga;        
     }
 
     public String getNotaStatus(){
+        //Inisiasi pesan
         String notaselesai = String.format("Nota %d :", this.id);
         if (this.isDone()) {
             return notaselesai += "Sudah selesai.\n";
@@ -109,20 +115,23 @@ public class Nota {
 
     @Override
     public String toString(){
+        //Inisiasi hasil
         String hasil = "";
+
         hasil += "[ID Nota = " + this.id + "]\n";
         hasil += "ID    : " + member.getId() + "\n";
         hasil += "Paket : " + this.paket + "\n";
         hasil += "Harga :\n";
-        hasil += this.getBerat() + " kg x " + this.baseHarga + " = " + (this.getBerat() * this.baseHarga) + "\n";
+        hasil += this.getBerat() + " kg x " + this.getBaseHarga() + " = " + (this.getBerat() * this.getBaseHarga()) + "\n";
         hasil += "tanggal terima  : " + this.getTanggal() + "\n";
         hasil += "tanggal selesai : " + tanggalSelesai + "\n";
         hasil += "--- SERVICE LIST ---\n";
+
         for (LaundryService service : this.getServices()) {
             hasil += "-" + service.getServiceName() + " @ Rp." + service.getHarga(this.getBerat()) + "\n";
         }
         if (sisaHariPengerjaan < 0){
-            hasil += "Harga Akhir: " + this.calculateHarga() + " Ada kompensasi keterlambatan " + (this.sisaHariPengerjaan * -1) + " * 2000 hari\n";
+            hasil += "Harga Akhir: " + this.calculateHarga() + " Ada kompensasi keterlambatan " + (this.sisaHariPengerjaan*-1) + " * 2000 hari\n";
         }else {
             hasil += "Harga Akhir: " + this.calculateHarga() + "\n";
         }
@@ -161,5 +170,9 @@ public class Nota {
 
     public LaundryService[] getServices(){
         return services;
+    }
+
+    public long getBaseHarga(){
+        return this.baseHarga;
     }
 }

@@ -32,8 +32,10 @@ public class Member {
      * @param nota Nota object untuk ditambahkan.
      */
     public void addNota(Nota nota) {
+        // Membuat baru
         Nota [] notaListBaru = Arrays.copyOf(notaList, notaList.length+1);
         notaListBaru[notaList.length]= nota;
+        //Overwrite dengan yang baru
         this.notaList = notaListBaru;
     }
 

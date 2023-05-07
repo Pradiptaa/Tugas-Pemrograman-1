@@ -30,12 +30,14 @@ public class EmployeeSystem extends SystemCLI {
     @Override
     protected boolean processChoice(int choice) {
         boolean logout = false;
+        // Print pesan sesuai apa yang sedang dikerjakan
         if (choice==1){
             System.out.printf("Stand back! %s beginning to nyuci! \n", super.loginMember.getNama());
             for (Nota nota : NotaManager.notaList) {
                 System.out.print(nota.kerjakan());
             }
         } else if (choice==2) {
+            //Cek status apakah sudah/belum selesai
             for (Nota nota : notaList) {
                 System.out.print(nota.getNotaStatus());
             }
