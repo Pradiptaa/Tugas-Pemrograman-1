@@ -1,11 +1,14 @@
 package assignments.assignment3.nota;
+import assignments.assignment3.nota.service.CuciService;
 import assignments.assignment3.nota.service.LaundryService;
 import assignments.assignment3.user.Member;
-import java.time.LocalDate;
+
+import java.text.ParseException;
 import java.util.Arrays;
-import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 
 public class Nota {
+    //Attributes
     private Member member;
     private String paket;
     private LaundryService[] services;
@@ -18,82 +21,89 @@ public class Nota {
     private boolean isDone;
     static public int totalNota;
 
+    //Constructors
     public Nota(Member member, int berat, String paket, String tanggal) {
+        //Assign param ke variable
         this.member = member;
         this.berat = berat;
         this.paket = paket.toLowerCase();
         this.tanggalMasuk = tanggal;
         this.isDone = false;
-        this.id = ++totalNota;
+        this.id = totalNota++;
+        this.services= new LaundryService[0];
 
-        DateTimeFormatter formatTanggal = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDate tanggalMulai = LocalDate.parse(tanggal, formatTanggal);
-        LocalDate selesaiDate;
+        this.addService(new CuciService()); //Menambah cuci service
+
 
         if (paket=="express") {
-            selesaiDate = tanggalMulai.plusDays(1);
-            this.tanggalSelesai = selesaiDate.format(formatTanggal);
             this.sisaHariPengerjaan = 1;
             this.baseHarga = 12000;
         } else if(paket=="fast") {
-            selesaiDate = tanggalMulai.plusDays(2);
-            this.tanggalSelesai = selesaiDate.format(formatTanggal);
             this.sisaHariPengerjaan = 2;
             this.baseHarga = 10000;
         } else if (paket=="reguler") {
-            selesaiDate = tanggalMulai.plusDays(3);
-            this.tanggalSelesai = selesaiDate.format(formatTanggal);
             this.sisaHariPengerjaan = 3;
             this.baseHarga = 7000;
+        }
+        try {
+        NotaManager.cal.setTime(NotaManager.fmt.parse(tanggal));
+        NotaManager.cal.add(5,this.sisaHariPengerjaan);
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
     }
 
     public void addService(LaundryService service){
-        LaundryService[] newServices = Arrays.copyOf(services, services.length+1);
-        newServices[services.length]=service;
-        services=newServices;
+        LaundryService[] newServices = Arrays.copyOf(this.services, services.length+1);
+        newServices[this.services.length]=service;
+        this.services=newServices;
     }
 
-    public String kerjakan(){
-        // ini bingung
-        String selesai= "";
-        for (LaundryService service : services) {
-            if (!isDone) {
-                selesai = "Sudah selesai";
-                break;
-            } else {
-                selesai=service.doWork();
-                break;
+    public String kerjakan() {
+        int i = 0;
+        while (i < this.services.length) {
+            // Mengecek status isDone dari tiap layanan pada array services
+            if (!this.services[i].isDone()) {
+                // Return String Nota-idNota : pekerjaan/layanan yang sedang dilakukan
+                String result = "Nota " + this.id + " : " + this.services[i].doWork()+ "\n";
+                // Ketika loop sampai di layanan paling akhir / sedang mengerjakan layanan terakhir dari array Services
+                if (i == this.services.length - 1) {
+                    this.isDone = true;
+                }
+                return result;
             }
+            i++;
         }
-        return String.format("Nota %d : %s.\n", this.id, selesai);
+        return this.getNotaStatus();
     }
+    
 
     public void toNextDay() {
-        if (isDone) {
-            sisaHariPengerjaan--;
+        if (!this.isDone()) {
+            this.sisaHariPengerjaan--;
         }
     }
 
     public long calculateHarga(){
         long harga = 0;
-        harga = harga + (baseHarga * berat);
-        for (LaundryService service : services) {
-            harga = harga + service.getHarga(berat);
+        harga = harga + (this.baseHarga * this.getBerat());
+        for (LaundryService service : this.services) {
+            harga = harga + service.getHarga(this.getBerat());
         }
         
-        if (sisaHariPengerjaan < 0){
-            harga = harga - (sisaHariPengerjaan * -1 * 2000);
+        if (this.sisaHariPengerjaan < 0){
+            harga = harga + (sisaHariPengerjaan * 2000);
         }
         
         return harga;        
     }
 
     public String getNotaStatus(){
-        if (!isDone) {
-            return String.format("Nota %d : Sudah selesai", this.id);
+        String notaselesai = String.format("Nota %d :", this.id);
+        if (this.isDone()) {
+            return notaselesai += "Sudah selesai.\n";
         } else {
-            return String.format("Nota %d : Belum selesai", this.id);
+            return notaselesai += "Belum selesai.\n";
         }
     }
 
@@ -104,19 +114,28 @@ public class Nota {
         hasil += "ID    : " + member.getId() + "\n";
         hasil += "Paket : " + this.paket + "\n";
         hasil += "Harga :\n";
-        hasil += berat + " kg x " + baseHarga + " = " + (berat * baseHarga) + "\n";
-        hasil += "tanggal terima  : " + tanggalMasuk + "\n";
+        hasil += this.getBerat() + " kg x " + this.baseHarga + " = " + (this.getBerat() * this.baseHarga) + "\n";
+        hasil += "tanggal terima  : " + this.getTanggal() + "\n";
         hasil += "tanggal selesai : " + tanggalSelesai + "\n";
         hasil += "--- SERVICE LIST ---\n";
-        for (LaundryService service : services) {
-            hasil += "-" + service.getServiceName() + " @ Rp." + service.getHarga(berat) + "\n";
+        for (LaundryService service : this.getServices()) {
+            hasil += "-" + service.getServiceName() + " @ Rp." + service.getHarga(this.getBerat()) + "\n";
         }
         if (sisaHariPengerjaan < 0){
-            hasil += "Harga Akhir: " + calculateHarga() + " Ada kompensasi keterlambatan " + (sisaHariPengerjaan * -1) + " * 2000 hari\n";
+            hasil += "Harga Akhir: " + this.calculateHarga() + " Ada kompensasi keterlambatan " + (this.sisaHariPengerjaan * -1) + " * 2000 hari\n";
         }else {
-            hasil += "Harga Akhir: " + calculateHarga() + "\n";
+            hasil += "Harga Akhir: " + this.calculateHarga() + "\n";
         }
         return hasil;
+    }
+
+    // Method untuk menentukan tanggalSelesai
+    public String setTanggalSelesai(){
+        Calendar copyOfCal = Calendar.getInstance();
+        copyOfCal.setTime (NotaManager.cal.getTime() );
+        copyOfCal.add(Calendar.DAY_OF_YEAR, sisaHariPengerjaan);
+        String tanggalSelesai = NotaManager.fmt.format(copyOfCal.getTime());
+        return tanggalSelesai;
     }
 
     // Dibawah ini adalah getter

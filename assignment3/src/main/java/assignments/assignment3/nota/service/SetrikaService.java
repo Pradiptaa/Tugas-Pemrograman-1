@@ -10,15 +10,12 @@ public class SetrikaService implements LaundryService{
 
     @Override
     public boolean isDone() {
-        if (selesai) {
-            return true;
-        }
-        return false;
+        return this.selesai;
     }
 
     @Override
     public long getHarga(int berat) {
-        return berat*11000;
+        return berat*1000;
     }
 
     @Override

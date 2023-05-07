@@ -10,10 +10,7 @@ public class CuciService implements LaundryService{
 
     @Override
     public boolean isDone() {
-        if(selesai) {
-            return true;
-        }
-        return false;
+        return this.selesai;
     }
 
     @Override

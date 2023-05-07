@@ -1,5 +1,7 @@
 package assignments.assignment3.nota.service;
 
+import assignments.assignment3.nota.Nota;
+
 public class AntarService implements LaundryService{
     private boolean selesai = false;
     @Override
@@ -10,11 +12,7 @@ public class AntarService implements LaundryService{
 
     @Override
     public boolean isDone() {
-        if (this.selesai == true){
-            return true;
-        } else {
-        return false;
-        }
+        return this.selesai;
     }
 
     @Override

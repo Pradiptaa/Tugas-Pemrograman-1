@@ -157,6 +157,9 @@ public class NotaGenerator {
         }
         //Konversi variable id menjadi string dengan format 2 digit
         String strId = String.format("%02d", id);
+        if (strId.length()>2) {
+            strId=strId.substring(strId.length()-2);
+        }
 
         //Mengambil nama index 0 dan menyimpan ke variable finalName
         String finalName = nama.split(" ")[0];

@@ -16,6 +16,7 @@ public class MainMenu {
     private static Calendar cal = Calendar.getInstance();
     private static ArrayList<Nota> notaList;
     private static ArrayList<Member> memberList;
+    private static int idNota;
 
     public static void main(String[] args) {
         boolean isRunning = true;
@@ -91,10 +92,11 @@ public class MainMenu {
         int hariSelesai = 0;
         String inputBerat = "";
         int beratInt = 0;
+        
+        
         //Meminta input ID
         System.out.println("Masukkan ID member: ");
         String checkid = input.nextLine();
-        int idnota = 0;
         boolean memberexist = false;
 
         Member member1 = new Member("","");
@@ -167,7 +169,7 @@ public class MainMenu {
             
                 //Print berhasil
                 System.out.println("Berhasil menambahkan nota!");
-                System.out.printf("[ID Nota = %d]\n",idnota);
+                System.out.printf("[ID Nota = %d]\n",idNota);
 
                 //Add nota baru ke ArrayList yang sudah ditentukan
                 Nota newNota = new Nota(member1, inputPaket, beratInt, fmt.format(cal.getTime()));
@@ -202,7 +204,7 @@ public class MainMenu {
                 System.out.printf("Tanggal Selesai : %s\n", tanggalSelesai);
                 System.out.println("Status      	: Belum bisa diambil :(");
                 //Menambah index idnota
-                idnota += 1;
+                idNota += 1;
             }
             // Jika id tidak ditemukan
             else {

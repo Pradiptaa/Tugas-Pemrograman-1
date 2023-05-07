@@ -4,7 +4,7 @@ import assignments.assignment3.nota.Nota;
 import assignments.assignment3.nota.NotaManager;
 import assignments.assignment3.nota.service.AntarService;
 import assignments.assignment3.nota.service.CuciService;
-import assignments.assignment3.nota.service.LaundryService;
+// import assignments.assignment3.nota.service.LaundryService;
 import assignments.assignment3.nota.service.SetrikaService;
 import assignments.assignment1.NotaGenerator;
 import java.util.Arrays;
@@ -19,7 +19,6 @@ public class MemberSystem extends SystemCLI {
     @Override
     protected boolean processChoice(int choice) {
         boolean logout = false;
-        // TODO
         switch (choice) {
             case 1:
                 createNota();
