@@ -32,7 +32,6 @@ public class MainFrame extends JFrame{
 
     private MainFrame(){
         super("CuciCuciSystem");
-//        TODO: uncomment code dibawah ini setelah kamu implmentasikan addEmployee pada EmployeeSystem.
 //        // for context dari 2 employee baru ini : https://ristek.link/karyawan-baru-cucicuci
 //        employeeSystem.addEmployee(new Employee[]{
 //                new Employee("delta Epsilon Huha Huha", "ImplicitDiff"),
