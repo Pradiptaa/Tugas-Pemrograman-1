@@ -34,13 +34,13 @@ public class Nota {
         this.addService(new CuciService()); //Menambah cuci service
 
 
-        if (paket.equals("express")) {
+        if (paket.equals("Express")) {
             this.sisaHariPengerjaan = 1;
             this.baseHarga = 12000;
-        } else if(paket.equals("fast")) {
+        } else if(paket.equals("Fast")) {
             this.sisaHariPengerjaan = 2;
             this.baseHarga = 10000;
-        } else if (paket.equals("reguler")) {
+        } else if (paket.equals("Reguler")) {
             this.sisaHariPengerjaan = 3;
             this.baseHarga = 7000;
         }
@@ -129,7 +129,12 @@ public class Nota {
             hasil += "-" + service.getServiceName() + " @ Rp." + service.getHarga(this.getBerat()) + "\n";
         }
         if (sisaHariPengerjaan < 0){
-            hasil += "Harga Akhir: " + this.calculateHarga() + " Ada kompensasi keterlambatan " + (this.sisaHariPengerjaan*-1) + " * 2000 hari\n";
+            if (this.calculateHarga() < 0){
+                hasil += "Harga Akhir: " + 0 + " Ada kompensasi keterlambatan " + (this.sisaHariPengerjaan*-1) + " * 2000 hari\n";
+            } else {
+                hasil += "Harga Akhir: " + this.calculateHarga() + " Ada kompensasi keterlambatan " + (this.sisaHariPengerjaan*-1) + " * 2000 hari\n";
+            };
+
         }else {
             hasil += "Harga Akhir: " + this.calculateHarga() + "\n";
         }
