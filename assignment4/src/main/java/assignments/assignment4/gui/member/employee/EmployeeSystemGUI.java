@@ -30,8 +30,10 @@ public class EmployeeSystemGUI extends AbstractMemberGUI {
      * */
     @Override
     protected JButton[] createButtons() {
-        // TODO
         return new JButton[]{
+            new JButton("It's nyuci time"),
+            new JButton("Display List Nota"),
+
         };
     }
 
@@ -54,7 +56,25 @@ public class EmployeeSystemGUI extends AbstractMemberGUI {
      * Akan dipanggil jika pengguna menekan button pertama pada createButtons
      * */
     private void displayNota() {
-        // TODO
+
+        // handle jika tidak ada nota
+        if (NotaManager.notaList.length == 0){
+            JOptionPane.showOptionDialog(null, "Belum ada nota", "List Nota", 
+                            JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE, null, null, null);
+            return;
+        }
+
+        // loop untuk menampilkan nota
+        String receipt = "<html>";
+
+        for (Nota nota : NotaManager.notaList){
+            receipt += nota.getNotaStatus() + "<br>";
+        }
+        receipt += "</html>";
+
+        // JOptionPane untuk menampilkan nota
+        JLabel scrollPane = new JLabel(receipt);
+        JOptionPane.showMessageDialog(this, scrollPane, "List Nota", JOptionPane.INFORMATION_MESSAGE);
     }
 
     /**
@@ -62,6 +82,31 @@ public class EmployeeSystemGUI extends AbstractMemberGUI {
      * Akan dipanggil jika pengguna menekan button kedua pada createButtons
      * */
     private void cuci() {
-        // TODO
+
+        
+        JOptionPane.showOptionDialog(null, "Stand back! " + loggedInMember.getNama() + " Beginning to nyuci!" , "Nyuci Time", 
+                            JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
+
+        // handle jika tidak ada nota
+        if (NotaManager.notaList.length == 0){
+            JOptionPane.showOptionDialog(null, "nothing to cuci here ", "Nyuci Results!", 
+                            JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE, null, null, null);
+            return;
+        }
+        
+        // loop menampilkan status nota
+        String infoNota = "<html>";
+
+
+        for (Nota nota : NotaManager.notaList){
+            infoNota += nota.kerjakan() + "<br>";
+        }
+
+        infoNota += "</html>";
+
+        // JOptionPane untuk menampilkan status nota
+        JLabel scrollPane = new JLabel(infoNota);
+        JOptionPane.showMessageDialog(this, scrollPane, "List Nota", JOptionPane.INFORMATION_MESSAGE);
+
     }
 }
