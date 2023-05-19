@@ -19,6 +19,7 @@ public abstract class AbstractMemberGUI extends JPanel implements Loginable{
         super(new BorderLayout());
         this.systemCLI = systemCLI;
         // Set up welcome label
+        
         welcomeLabel = new JLabel("", SwingConstants.CENTER);
         welcomeLabel.setFont(new Font("Arial", Font.BOLD, 24));
         add(welcomeLabel, BorderLayout.NORTH);
@@ -88,8 +89,19 @@ public abstract class AbstractMemberGUI extends JPanel implements Loginable{
      * @return true jika ID dan password sesuai dengan instance member, false jika tidak.
      * */
     public boolean login(String id, String password) {
-        // TODO
-        return false;
+
+        // jika gagal login
+        if (systemCLI.authUser(id, password) == null){
+            return false;
+        }
+
+        // assign member yg berhasil login ke LoggedInMember
+        loggedInMember = systemCLI.authUser(id, password);
+
+        // update label
+        welcomeLabel.setText("Welcome " + loggedInMember.getNama());
+        loggedInAsLabel.setText("Logged in as " + loggedInMember.getId());
+        return true;
     }
 
     /**

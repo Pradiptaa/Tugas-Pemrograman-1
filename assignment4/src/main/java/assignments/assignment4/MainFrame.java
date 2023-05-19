@@ -45,6 +45,10 @@ public class MainFrame extends JFrame{
                 employeeSystemGUI,
                 memberSystemGUI,
         };
+
+        Container cont = getContentPane();
+        cont.setLayout(new GridBagLayout());
+        
         initGUI();
         cards.show(mainPanel, HomeGUI.KEY);
         add(mainPanel);
@@ -83,7 +87,19 @@ public class MainFrame extends JFrame{
      * @param page -> key dari halaman yang diinginkan.
      * */
     public void navigateTo(String page){
-        // TODO
+        if (page.equals("HOME")){
+            cards.show(mainPanel, HomeGUI.KEY);
+        } else if (page.equals("LOGIN")){
+            cards.show(mainPanel, LoginGUI.KEY);
+        } else if (page.equals("REGISTER")){
+            cards.show(mainPanel, RegisterGUI.KEY);
+        } else if (page.equals("MEMBER")){
+            cards.show(mainPanel, MemberSystemGUI.KEY);
+        } else if (page.equals("EMPLOYEE")){
+            cards.show(mainPanel, EmployeeSystemGUI.KEY);
+        } else if (page.equals("CREATE_NOTA")){
+            cards.show(mainPanel, CreateNotaGUI.KEY);
+        }
     }
 
     /**
@@ -99,7 +115,10 @@ public class MainFrame extends JFrame{
     public boolean login(String id, String password){
         for (Loginable panel:
                 loginablePanel) {
-            // TODO
+            if (panel.login(id,password) == true){
+                LoginGUI.setRole(panel);
+                return true;
+            }
         }
         return false;
     }
